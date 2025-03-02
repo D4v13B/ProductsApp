@@ -12,12 +12,12 @@ export class SecureStorageAdapter {
       }
    }
 
-   static async getItem(key: string){
+   static async getItem(key: string): Promise<string | undefined>{
       try {
-         return await SecureStore.getItemAsync(key)
+         return await SecureStore.getItemAsync(key) ?? undefined
       } catch (error) {
          Alert.alert("Error", "Failed to get data")
-         return null
+         return undefined
       }
    }
 
@@ -27,7 +27,7 @@ export class SecureStorageAdapter {
       } catch (error) {
          console.log(error)
          Alert.alert("Error", "Failed to delete storage")
-         return null
+         return undefined
       }
    }
 }

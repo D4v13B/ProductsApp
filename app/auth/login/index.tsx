@@ -70,7 +70,7 @@ const LoginScreen = () => {
                   paddingTop: height * 0.35,
                }}
             >
-               <ThemedText type="title">HOLA LUIS</ThemedText>
+               <ThemedText type="title">LoginScreen</ThemedText>
                <ThemedText style={{ color: "grey" }}>
                   Por favor ingrese para continuar
                </ThemedText>

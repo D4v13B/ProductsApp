@@ -1,15 +1,22 @@
 import { useRef, useState } from "react"
-import { View, TextInputProps, StyleSheet, TextInput, Button } from "react-native"
+import {
+   View,
+   TextInputProps,
+   StyleSheet,
+   TextInput,
+   Button,
+} from "react-native"
 
 import { Ionicons } from "@expo/vector-icons"
 
 import { useThemeColor } from "./hooks/useThemeColor"
+import { ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes"
 
 interface Props extends TextInputProps {
    icon?: keyof typeof Ionicons.glyphMap
 }
 
-const ThemedTextInput = ({ icon, ...rest }: Props) => {
+const ThemedTextInput = ({ icon, style, ...rest }: Props) => {
    const primary = useThemeColor({}, "primary")
    const textColor = useThemeColor({}, "text")
 
@@ -18,10 +25,13 @@ const ThemedTextInput = ({ icon, ...rest }: Props) => {
 
    return (
       <View
-         style={{
-            ...style.border,
-            borderColor: isActive ? primary : "#ccc",
-         }}
+         style={[
+            {
+               ...styles.border,
+               borderColor: isActive ? primary : "#ccc",
+            },
+            style as ViewStyle
+         ]}
          onTouchStart={() => inputRef.current?.focus()}
       >
          {icon && (
@@ -44,18 +54,16 @@ const ThemedTextInput = ({ icon, ...rest }: Props) => {
             }}
             {...rest}
          />
-
-         
       </View>
    )
 }
 export default ThemedTextInput
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
    border: {
       borderWidth: 1,
       borderRadius: 5,
-      padding: 8,
+      padding: 10,
       marginBottom: 10,
       flexDirection: "row",
       alignItems: "center",

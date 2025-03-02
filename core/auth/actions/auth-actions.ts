@@ -45,14 +45,17 @@ export const authLogin = async (email: string, password: string) => {
 
 export const authCheckStatus = async (token: string | undefined) => {
    try {
+      
+      
       const { data } = await productApi.get<AuthResponse>("/auth/check-status", {
          headers: {
             Authorization: `Bearer ${token}`
          }
       })
-
+      
       return returnUserToken(data)
    } catch (error) {
+      console.log(error)
       return null
    }
 }

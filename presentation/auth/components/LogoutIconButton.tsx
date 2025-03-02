@@ -9,12 +9,11 @@ const LogoutIconButton = () => {
 
    function handleLogout() {
       logout()
-      console.log("Hola")
    }
 
    return (
       <TouchableOpacity style={{marginRight: 8}}
-         onPress={handleLogout}
+         onPressIn={handleLogout}
       >
          <Ionicons name="log-out-outline" size={24} color={primary}/>
       </TouchableOpacity>
