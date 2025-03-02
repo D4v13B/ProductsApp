@@ -1,3 +1,4 @@
+import ProductImages from "@/presentation/products/components/ProductImages"
 import useProduct from "@/presentation/products/hooks/useProduct"
 import { useThemeColor } from "@/presentation/theme/components/hooks/useThemeColor"
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput"
@@ -55,6 +56,9 @@ const ProducScreen = () => {
       >
          <ScrollView>
             {/* TODO: Product images */}
+            <ProductImages images={product.images}/>
+
+
             <ThemedView style={{ marginHorizontal: 10, marginTop: 20 }}>
                <ThemedTextInput
                   placeholder="Titulo"
