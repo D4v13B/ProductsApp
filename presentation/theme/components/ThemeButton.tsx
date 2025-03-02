@@ -4,11 +4,11 @@ import { Ionicons } from "@expo/vector-icons"
 import { ThemedText } from "./ThemedText"
 
 interface Props extends PressableProps {
-   children: string
+   children?: string
    icon?: keyof typeof Ionicons.glyphMap
 }
 
-const ThemeButton = ({ children, icon, ...rest }: Props) => {
+const ThemeButton = ({ children, icon, ...rest}: Props) => {
    const primary = useThemeColor({}, "primary")
 
    const styles = StyleSheet.create({

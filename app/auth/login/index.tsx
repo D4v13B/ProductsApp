@@ -6,6 +6,7 @@ import {
    useWindowDimensions,
    View,
 } from "react-native"
+import { router } from "expo-router"
 
 import { useThemeColor } from "@/presentation/theme/components/hooks/useThemeColor"
 import ThemeButton from "@/presentation/theme/components/ThemeButton"
@@ -13,49 +14,47 @@ import { ThemedText } from "@/presentation/theme/components/ThemedText"
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput"
 import ThemeLink from "@/presentation/theme/components/ThemeLink"
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore"
-import { router } from "expo-router"
 
 const LoginScreen = () => {
-
-   const {status, login} = useAuthStore()
+   const { status, login } = useAuthStore()
 
    useEffect(() => {
-      if(status == 'authenticated'){
+      if (status == "authenticated") {
          router.replace("/(products-app)/(home)")
       }
    }, [])
-   
+
    const { height } = useWindowDimensions()
    const background = useThemeColor({}, "background")
-   
+
    const [isPosting, setIsPosting] = useState(false)
    const [form, setForm] = useState({
       email: "",
       password: "",
    })
-   
+
+   const primary = useThemeColor({}, "primary")
+
    const onLogin = async () => {
-      const {email, password } = form
-      
-      
-      if(form.email.length == 0 || form.password.length == 0) {
-         Alert.alert('Error', 'Llenar los campos de email o contraseña')
+      const { email, password } = form
+
+      if (form.email.length == 0 || form.password.length == 0) {
+         Alert.alert("Error", "Llenar los campos de email o contraseña")
          setIsPosting(false)
          return
       }
       setIsPosting(true)
-      
+
       const wasSuccesful = await login(email, password)
-      
-      if(wasSuccesful) {
+
+      if (wasSuccesful) {
          // Alert.alert('Success', 'Todo esta correcto')
-         router.replace('/(products-app)/(home)')
+         router.replace("/(products-app)/(home)")
          return
       }
-      
-      Alert.alert('Error', 'Usuario o contraseña no son correctos')
-      setIsPosting(false)
 
+      Alert.alert("Error", "Usuario o contraseña no son correctos")
+      setIsPosting(false)
    }
 
    return (
@@ -71,7 +70,7 @@ const LoginScreen = () => {
                   paddingTop: height * 0.35,
                }}
             >
-               <ThemedText type="title">LoginScreen</ThemedText>
+               <ThemedText type="title">HOLA LUIS</ThemedText>
                <ThemedText style={{ color: "grey" }}>
                   Por favor ingrese para continuar
                </ThemedText>
@@ -90,9 +89,8 @@ const LoginScreen = () => {
                   autoCapitalize="none"
                   // ICON
                   icon="mail-outline"
-
                   value={form.email}
-                  onChangeText={(value)=> setForm({...form, email: value})}
+                  onChangeText={(value) => setForm({ ...form, email: value })}
                />
 
                <ThemedTextInput
@@ -101,15 +99,22 @@ const LoginScreen = () => {
                   secureTextEntry
                   // ICON
                   icon="lock-closed-outline"
-
                   value={form.password}
-                  onChangeText={(value)=> setForm({...form, password: value})}
+                  onChangeText={(value) =>
+                     setForm({ ...form, password: value })
+                  }
                />
 
                <View style={{ marginTop: 10 }} />
 
                {/* Personal button */}
-               <ThemeButton onPress={onLogin} disabled={isPosting} icon="arrow-forward-circle">Ingresar</ThemeButton>
+               <ThemeButton
+                  onPress={onLogin}
+                  disabled={isPosting}
+                  icon="arrow-forward-circle"
+               >
+                  Ingresar
+               </ThemeButton>
 
                <View style={{ marginTop: 30 }} />
 

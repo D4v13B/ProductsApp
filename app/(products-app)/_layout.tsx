@@ -1,20 +1,18 @@
 import { useEffect } from "react"
 import { ActivityIndicator, View } from "react-native"
-
-import { ThemedText } from "@/presentation/theme/components/ThemedText"
+import { Redirect, Stack } from "expo-router"
 
 import { useAuthStore } from "@/presentation/auth/store/useAuthStore"
-import { Redirect, Stack } from "expo-router"
 import { useThemeColor } from "@/presentation/theme/components/hooks/useThemeColor"
+import LogoutIconButton from "@/presentation/auth/components/LogoutIconButton"
 
 const CheckAuthLayout = () => {
    const { status, checkStatus } = useAuthStore()
    const backgroundColor = useThemeColor({}, "background")
 
    useEffect(() => {
-      // console.log(status);
       checkStatus()
-   }, [])
+   }, [status])
 
    if (status == "checking") {
       return (
@@ -37,21 +35,25 @@ const CheckAuthLayout = () => {
    }
 
    return (
-      <Stack
-         screenOptions={{
-            headerShadowVisible: false,
-            headerStyle: {
-               backgroundColor: backgroundColor,
-            },
-         }}
-      >
-         <Stack.Screen
-            name="(home)/index"
-            options={{
-               title: "Productos",
+      <>
+         <Stack
+            screenOptions={{
+               headerShadowVisible: false,
+               headerStyle: {
+                  backgroundColor: backgroundColor,
+               },
             }}
-         />
-      </Stack>
+         >
+            <Stack.Screen
+               name="(home)/index"
+               options={{
+                  title: "Productos",
+                  headerTitleAlign: "center",
+                  headerRight: () => <LogoutIconButton />,
+               }}
+            />
+         </Stack>
+      </>
    )
 }
 export default CheckAuthLayout

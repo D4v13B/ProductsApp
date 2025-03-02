@@ -1,6 +1,7 @@
+import { View} from "react-native"
 import { useThemeColor } from "@/presentation/theme/components/hooks/useThemeColor"
 import { ThemedText } from "@/presentation/theme/components/ThemedText"
-import { View, Text } from "react-native"
+
 const HomeScreen = () => {
 
    const primary = useThemeColor({}, "primary")

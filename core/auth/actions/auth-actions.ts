@@ -17,17 +17,8 @@ const returnUserToken = (
    user: User
    token: string
 } => {
-   // const { id, email, fullName, isActive, roles, token } = data
 
    const { token, ...user } = data
-
-   // const user: User = {
-   //    id,
-   //    email,
-   //    fullName,
-   //    isActive,
-   //    roles,
-   // }
 
    return {
       user,
@@ -43,11 +34,11 @@ export const authLogin = async (email: string, password: string) => {
          email,
          password,
       })
-
+      
       return returnUserToken(data)
    } catch (error) {
       console.log(error)
-      // throw new Error('User and/or password not valid')
+      throw new Error('User and/or password not valid')
       return null
    }
 }
