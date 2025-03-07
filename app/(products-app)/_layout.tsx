@@ -46,6 +46,7 @@ const CheckAuthLayout = () => {
                headerStyle: {
                   backgroundColor: backgroundColor,
                },
+               animation: "slide_from_bottom"
             }}
          >
             <Stack.Screen
