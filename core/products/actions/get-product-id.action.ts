@@ -1,7 +1,23 @@
 import { API_URL, productApi } from "@/core/api/productsApi"
-import { type ProductResponse } from "../interfaces/product.interface"
+import { Gender, type ProductResponse } from "../interfaces/product.interface"
+
+const emprtyProduct: ProductResponse = {
+   id: '',
+   title: "Nuevo Producto",
+   description: "",
+   price: 0,
+   images: [],
+   slug: "",
+   gender: Gender.Men,
+   sizes: [],
+   stock: 0,
+   tags: []
+}
 
 export const getProductById = async (id: string): Promise<ProductResponse> => {
+
+   if(id === 'new') return emprtyProduct
+
    try {
       const { data } = await productApi.get<ProductResponse>(`/products/${id}`)
 

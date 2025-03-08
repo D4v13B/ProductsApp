@@ -1,3 +1,17 @@
+import { useEffect, useState } from "react"
+import {
+   View,
+   Text,
+   KeyboardAvoidingView,
+   Platform,
+   ActivityIndicator,
+} from "react-native"
+import { Ionicons } from "@expo/vector-icons"
+import { Redirect, useLocalSearchParams, useNavigation } from "expo-router"
+import { RefreshControl, ScrollView } from "react-native-gesture-handler"
+
+import { Formik } from "formik"
+
 import { Size } from "@/core/products/interfaces/product.interface"
 import ProductImages from "@/presentation/products/components/ProductImages"
 import useProduct from "@/presentation/products/hooks/useProduct"
@@ -6,23 +20,13 @@ import ThemeButton from "@/presentation/theme/components/ThemeButton"
 import ThemedButtonGroup from "@/presentation/theme/components/ThemeButtonGroup"
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput"
 import { ThemedView } from "@/presentation/theme/components/ThemedView"
-import { Ionicons } from "@expo/vector-icons"
-import { Redirect, useLocalSearchParams, useNavigation } from "expo-router"
-import { Formik } from "formik"
-import { useEffect } from "react"
-import {
-   View,
-   Text,
-   KeyboardAvoidingView,
-   Platform,
-   ActivityIndicator,
-} from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
+
 const ProducScreen = () => {
    const { id } = useLocalSearchParams()
    const navigation = useNavigation()
+   const [refreshing, setRefreshing] = useState(false)
 
-   const { productQuery } = useProduct(`${id}`)
+   const { productQuery, productMutation } = useProduct(`${id}`)
 
    const primary = useThemeColor({}, "primary")
 
@@ -42,6 +46,7 @@ const ProducScreen = () => {
             title: productQuery.data.title,
          })
       }
+      
    }, [productQuery.data])
 
    if (productQuery.isLoading) {
@@ -58,18 +63,25 @@ const ProducScreen = () => {
       return <Redirect href={"/"} />
    }
 
-   const product = productQuery.data!
+   
+   const onRefresh = async () => {
+      setRefreshing(true)
+      await productQuery.refetch()
+      setRefreshing(false)
+   }
 
+   const product = productQuery.data!
+   
    return (
       <Formik
          initialValues={product}
-         onSubmit={(productLike) => console.log(productLike)}
+         onSubmit={(productLike) => productMutation.mutate(productLike)}
       >
          {({ values, handleSubmit, handleChange, setFieldValue }) => (
             <KeyboardAvoidingView
                behavior={Platform.OS == "ios" ? "padding" : undefined}
             >
-               <ScrollView>
+               <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
                   {/* TODO: Product images */}
                   <ProductImages images={values.images} />
 
@@ -131,10 +143,13 @@ const ProducScreen = () => {
                         options={["XS", "S", "M", "L", "XL", "XXL", "XXXL"]}
                         selectedOptions={values.sizes}
                         onSelect={(selectedSize) => {
+                           const newSizesValues = values.sizes.includes(
+                              selectedSize as Size
+                           )
+                              ? values.sizes.filter((s) => s !== selectedSize)
+                              : [...values.sizes, selectedSize]
 
-                           const newSizesValues = values.sizes.includes(selectedSize as Size) ? values.sizes.filter(s => s !== selectedSize) : [...values.sizes, selectedSize]
-
-                           setFieldValue('sizes', newSizesValues)
+                           setFieldValue("sizes", newSizesValues)
                         }}
                      />
 

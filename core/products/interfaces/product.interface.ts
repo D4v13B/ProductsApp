@@ -11,7 +11,7 @@ export interface ProductResponse {
    gender:      Gender;
    tags:        string[];
    images:      string[];
-   user:        User;
+   user?:        User;
 }
 
 export enum Size {
