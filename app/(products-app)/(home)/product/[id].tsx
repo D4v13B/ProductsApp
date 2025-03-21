@@ -7,7 +7,12 @@ import {
    ActivityIndicator,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { Redirect, useLocalSearchParams, useNavigation } from "expo-router"
+import {
+   Redirect,
+   router,
+   useLocalSearchParams,
+   useNavigation,
+} from "expo-router"
 import { RefreshControl, ScrollView } from "react-native-gesture-handler"
 
 import { Formik } from "formik"
@@ -20,6 +25,7 @@ import ThemeButton from "@/presentation/theme/components/ThemeButton"
 import ThemedButtonGroup from "@/presentation/theme/components/ThemeButtonGroup"
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput"
 import { ThemedView } from "@/presentation/theme/components/ThemedView"
+import MenuIconButton from "@/presentation/theme/components/MenuIconButton"
 
 const ProducScreen = () => {
    const { id } = useLocalSearchParams()
@@ -35,7 +41,10 @@ const ProducScreen = () => {
 
       navigation.setOptions({
          headerRight: () => (
-            <Ionicons name="camera-outline" size={30} color={primary} />
+            <MenuIconButton
+               onPress={() => router.push("/camera")}
+               icon="camera-outline"
+            />
          ),
       })
    }, [])
@@ -46,7 +55,6 @@ const ProducScreen = () => {
             title: productQuery.data.title,
          })
       }
-      
    }, [productQuery.data])
 
    if (productQuery.isLoading) {
@@ -63,7 +71,6 @@ const ProducScreen = () => {
       return <Redirect href={"/"} />
    }
 
-   
    const onRefresh = async () => {
       setRefreshing(true)
       await productQuery.refetch()
@@ -71,7 +78,7 @@ const ProducScreen = () => {
    }
 
    const product = productQuery.data!
-   
+
    return (
       <Formik
          initialValues={product}
@@ -81,7 +88,14 @@ const ProducScreen = () => {
             <KeyboardAvoidingView
                behavior={Platform.OS == "ios" ? "padding" : undefined}
             >
-               <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
+               <ScrollView
+                  refreshControl={
+                     <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                     />
+                  }
+               >
                   {/* TODO: Product images */}
                   <ProductImages images={values.images} />
 
