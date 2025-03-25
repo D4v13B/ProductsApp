@@ -26,8 +26,18 @@ import ThemedButtonGroup from "@/presentation/theme/components/ThemeButtonGroup"
 import ThemedTextInput from "@/presentation/theme/components/ThemedTextInput"
 import { ThemedView } from "@/presentation/theme/components/ThemedView"
 import MenuIconButton from "@/presentation/theme/components/MenuIconButton"
+import { useCameraStore } from "@/presentation/store/useCameraStore"
 
 const ProducScreen = () => {
+
+   const {selectedImages, clearImages} = useCameraStore()
+
+   useEffect(() => {
+      return () => {
+         clearImages()
+      }
+   }, [])
+
    const { id } = useLocalSearchParams()
    const navigation = useNavigation()
    const [refreshing, setRefreshing] = useState(false)
@@ -82,7 +92,10 @@ const ProducScreen = () => {
    return (
       <Formik
          initialValues={product}
-         onSubmit={(productLike) => productMutation.mutate(productLike)}
+         onSubmit={(productLike) => productMutation.mutate({
+            ...productLike,
+            images: [...productLike.images, ...selectedImages]
+         })}
       >
          {({ values, handleSubmit, handleChange, setFieldValue }) => (
             <KeyboardAvoidingView
@@ -97,7 +110,7 @@ const ProducScreen = () => {
                   }
                >
                   {/* TODO: Product images */}
-                  <ProductImages images={values.images} />
+                  <ProductImages images={[...product.images, ...selectedImages]} />
 
                   <ThemedView style={{ marginHorizontal: 10, marginTop: 20 }}>
                      <ThemedTextInput

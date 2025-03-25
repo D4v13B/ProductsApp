@@ -45,7 +45,8 @@
     "zustand": "^5.0.0-rc.2",
     "expo-camera": "~16.0.17",
     "expo-media-library": "~17.0.6",
-    "expo-dev-client": "~5.0.14"
+    "expo-dev-client": "~5.0.14",
+    "expo-image-picker": "~16.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

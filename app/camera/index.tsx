@@ -11,15 +11,18 @@ import {
 } from "react-native"
 
 import { router } from "expo-router"
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera"
+import * as MediaLibrary from "expo-media-library"
+import * as ImagePicker from "expo-image-picker"
 
 import { Ionicons } from "@expo/vector-icons"
 
 import { useThemeColor } from "@/presentation/theme/components/hooks/useThemeColor"
-
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera"
-import * as MediaLibrary from "expo-media-library"
+import { useCameraStore } from "@/presentation/store/useCameraStore"
 
 export default function CameraScreen() {
+   const { addSelectedImage } = useCameraStore()
+
    const [facing, setFacing] = useState<CameraType>("back")
    const [cameraPermission, requestCameraPermission] = useCameraPermissions()
    const [mediaPermission, requestMediaPermission] =
@@ -82,7 +85,6 @@ export default function CameraScreen() {
 
       setSelectedImage(picture?.uri)
       if (picture?.uri) return
-
    }
 
    const onReturnCancel = () => {
@@ -92,16 +94,37 @@ export default function CameraScreen() {
    }
 
    const onPictureAccepted = async () => {
-      if (!selectedImage) {
-         console.log("No hay")
-         return
-      }
+      if (!selectedImage) return
 
       await MediaLibrary.createAssetAsync(selectedImage)
+
+      addSelectedImage(selectedImage)
+
+      router.dismiss() //Para cerrar la pantalla actual y regresar donde estabamos
    }
 
    const onPictureCancel = () => {
+      //Retake photo
       setSelectedImage(undefined)
+   }
+
+   const onPickImages = async () => {
+      const result = await ImagePicker.launchImageLibraryAsync({
+         mediaTypes: ["images"],
+         // allowsEditing: true,
+         aspect: [4, 3], // ancho, alto
+         quality: 0.5,
+         allowsMultipleSelection: true,
+         selectionLimit: 5
+      })
+
+
+      if(result.canceled) return
+      
+      result.assets.forEach(e => addSelectedImage(e.uri))
+
+      router.dismiss()
+      // addSelectedImage(result.assets.map( (e) => e.uri))
    }
 
    function toggleCameraFacing() {
@@ -126,7 +149,7 @@ export default function CameraScreen() {
             <FlipCameraButton onPress={toggleCameraFacing} />
             <ReturnCancelButton onPress={onReturnCancel} />
             {/* TODO: Redirigir a la galeria para seleccionar foto*/}
-            <GalleryButton />
+            <GalleryButton onPress={onPickImages}/>
          </CameraView>
       </View>
    )
